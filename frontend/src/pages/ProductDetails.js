@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import ProductService from '../services/product.service';
+import { CartContext } from '../contexts/CartContext';
 
 function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { addToCart } = useContext(CartContext);
   
   useEffect(() => {
     const fetchProduct = async () => {
@@ -24,6 +26,12 @@ function ProductDetails() {
     
     fetchProduct();
   }, [id]);
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+    }
+  };
 
   if (loading) return <div>Loading product details...</div>;
   if (error) return <div className="error-message">{error}</div>;
